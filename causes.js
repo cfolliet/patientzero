@@ -14,10 +14,10 @@ function joinIssuesAndCommits(issues, commits) {
             commit.files.forEach(f => {
                 let file = files.get(f);
                 if (file) {
-                    file.issues.push(i.key);
+                    file.issues.push({ key: i.key, summary: i.fields.summary });
                     file.count++;
                 } else {
-                    file = { count: 1, issues: [i.key] };
+                    file = { count: 1, issues: [{ key: i.key, summary: i.fields.summary }] };
                 }
                 files.set(f, file)
             })
@@ -36,16 +36,16 @@ function joinIssuesAndCommits(issues, commits) {
 async function getCauses() {
     let issues = await getIssues();
     let commits = await getCommits();
-    return joinIssuesAndCommits(issues, commits);   
+    return joinIssuesAndCommits(issues, commits);
 }
 
 async function test() {
     const join = await getCauses();
-    console.log(join.matchCount);
+    /*console.log(join.matchCount);
     console.log(join.noMatchCount);
     const arr = [...join.files.entries()]
     arr.sort((a, b) => b[1].count - a[1].count)
-    arr.forEach(a => console.log(a[0], a[1].count, a[1].issues))
+    arr.forEach(a => console.log(a[0], a[1].count, a[1].issues))*/
 }
 //test();
 
