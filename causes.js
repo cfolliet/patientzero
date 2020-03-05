@@ -29,16 +29,14 @@ function joinIssuesAndCommits(issues, commits) {
     return {
         matchCount: matchCount,
         noMatchCount: noMatchCount,
-        files: files
+        files: [...files.entries()].sort((a, b) => b[1].count - a[1].count)
     }
 }
 
 async function getCauses() {
-
     let issues = await getIssues();
     let commits = await getCommits();
-
-    return joinIssuesAndCommits(issues, commits);
+    return joinIssuesAndCommits(issues, commits);   
 }
 
 async function test() {
