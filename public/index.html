@@ -6,8 +6,16 @@
 </head>
 
 <body>
-    <h3>Hello you !</h3>
+    <h3>Where are bugs origins ?</h3>
     <div>
+        <input id="workingDir" placeholder="Git working directory" type="text" value="c://directory">
+        <input id="host" placeholder="Jira host" type="text" value="xxx.atlassian.net">
+        <input id="email" placeholder="Your Jira email" type="email">
+        <input id="token" placeholder="Jira token" type="text">
+        <input id="since" placeholder="Analyse logs since X days" type="number" min="1" max="1000">
+        <input id="boardId" placeholder="Jira Board Id" type="number" min="1" max="1000">
+        <input id="projectKey" placeholder="Jira Project Key" type="text" value="HT">
+        <input id="keyFormat" placeholder="Git commit Key" type="text" value="ISSUE-">
         <button id="load">Load</button>
     </div>
     <div id="causes">

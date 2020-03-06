@@ -1,18 +1,17 @@
 const simpleGit = require('simple-git/promise');
-const git = simpleGit('F:\\Workspace\\hellotalent');
 
-async function getCommits() {
+async function getCommits(workingDir, since, keyFormat) {
+  const git = simpleGit(workingDir);
   const logs = await git.raw(
     [
       'log',
-      '--since="365 days"',
-      '--grep=HT-',
+      `--since="${since} days"`,
+      `--grep=${keyFormat}`,
       '--name-only',
       '--pretty=short',
       '-m'
     ]);
   let commits = logs.split(/(?=commit )/).map(c => c.split('\n'));
-  //commits = commits.filter(c => c[1].startsWith('Merge') && c[4].trim().startsWith('Merged')); // keep only merge commit
   commits = commits.map(c => {
     return {
       message: c[3].trim() + c[4].trim(),
@@ -23,7 +22,7 @@ async function getCommits() {
 }
 
 async function test() {
-  const commits = await getCommits()
+  const commits = await getCommits(30, 'HT-')
   console.log(commits)
 }
 //test();

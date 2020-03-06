@@ -1,9 +1,34 @@
 let data = null;
 
+function setConfig() {
+    const raw = localStorage.getItem('config');
+    if (raw) {
+        const config = JSON.parse(raw);
+        document.getElementById('workingDir').value = config.workingDir;
+        document.getElementById('host').value = config.host;
+        document.getElementById('email').value = config.email;
+        document.getElementById('token').value = config.token;
+        document.getElementById('since').value = config.since;
+        document.getElementById('boardId').value = config.boardId;
+        document.getElementById('projectKey').value = config.projectKey;
+        document.getElementById('keyFormat').value = config.keyFormat;
+    }
+}
+
 async function getData() {
-    const response = await fetch('/api/getdata');
+    const workingDir = document.getElementById('workingDir').value;
+    const host = document.getElementById('host').value;
+    const email = document.getElementById('email').value;
+    const token = document.getElementById('token').value;
+    const since = document.getElementById('since').value;
+    const boardId = document.getElementById('boardId').value;
+    const projectKey = document.getElementById('projectKey').value;
+    const keyFormat = document.getElementById('keyFormat').value;
+    const url = encodeURI(`/api/getdata?workingDir=${workingDir}&host=${host}&email=${email}&token=${token}&since=${since}&boardId=${boardId}&projectKey=${projectKey}&keyFormat=${keyFormat}`);
+    const response = await fetch(url);
     data = await response.json();
     refreshCauses();
+    localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }))
 }
 
 function refreshCauses() {
@@ -33,6 +58,7 @@ function bind() {
 }
 
 async function main() {
+    setConfig();
     bind();
 }
 
