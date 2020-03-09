@@ -1,7 +1,6 @@
 const JiraClient = require("jira-connector");
 
 async function getIssues(host, email, token, since, boardId, projectKey) {
-    console.log(email, token)
     const jira = new JiraClient({
         host: host,
         strictSSL: true,

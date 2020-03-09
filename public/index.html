@@ -3,20 +3,58 @@
 <head>
     <title>Patient Zero</title>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <style>
+        .block {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
     <h3>Where are bugs origins ?</h3>
-    <div>
-        <input id="workingDir" placeholder="Git working directory" type="text" value="c://directory">
-        <input id="host" placeholder="Jira host" type="text" value="xxx.atlassian.net">
-        <input id="email" placeholder="Your Jira email" type="email">
-        <input id="token" placeholder="Jira token" type="text">
-        <input id="since" placeholder="Analyse logs since X days" type="number" min="1" max="1000">
-        <input id="boardId" placeholder="Jira Board Id" type="number" min="1" max="1000">
-        <input id="projectKey" placeholder="Jira Project Key" type="text" value="HT">
-        <input id="keyFormat" placeholder="Git commit Key" type="text" value="ISSUE-">
-        <button id="load">Load</button>
+    <div class="mdl-grid">
+        <div class="mdl-cell mdl-cell--6-col">
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="host" type="text" value="xxx.atlassian.net">
+                <label class="mdl-textfield__label" for="host">Jira host</label>
+            </div>
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="email" type="email">
+                <label class="mdl-textfield__label" for="email">Your Jira email</label>
+            </div>
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="token" type="text">
+                <label class="mdl-textfield__label" for="token">Jira token</label>
+            </div>
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="boardId" type="number" min="1" max="1000">
+                <label class="mdl-textfield__label" for="boardId">Jira Board Id</label>
+            </div>
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="projectKey" type="text" value="HT">
+                <label class="mdl-textfield__label" for="projectKey">Jira Project Key</label>
+            </div>
+        </div>
+        <div class="mdl-cell mdl-cell--6-col">
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="workingDir" type="text" value="c://directory">
+                <label class="mdl-textfield__label" for="workingDir">Git working directory</label>
+            </div>
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="keyFormat" type="text" value="ISSUE-">
+                <label class="mdl-textfield__label" for="keyFormat">Git commit Key</label>
+            </div>
+            <div class="block mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" id="since" type="number" min="1" max="1000">
+                <label class="mdl-textfield__label" for="since">Analyse logs since X days</label>
+            </div>
+        </div>
+        <button id="load" class="block mdl-button mdl-js-button mdl-button--raised mdl-button--colored">
+            Load
+        </button>
     </div>
     <div id="causes">
         <div id="nbCauses"></div>
