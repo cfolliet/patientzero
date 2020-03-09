@@ -38,19 +38,27 @@ function refreshCauses() {
     const nbNoCauses = document.getElementById('nbNoCauses');
     const causefiles = document.getElementById('causefiles');
     nbCauses.innerText = `Bug with commits: ${data.matchCount}`;
-    nbNoCauses.innerText = `Bug without commits: ${data.noMatchCount}`;;
+    nbNoCauses.innerText = `Bug without commits: ${data.noMatchCount}`;
+    let index = 0;
     data.files.forEach(file => {
         const issues = file[1].issues.map(i => {
+            index++;
             const issue = templateIssue.content.cloneNode(true);
-            issue.querySelectorAll('.chip')[0].innerHTML = '<a href="https://talentsoft.atlassian.net/browse/' + i.key + '" title="' + i.summary + '">' + i.key + '</a>';
+            const link = issue.querySelector('.link');
+            link.setAttribute('id', index);
+            link.setAttribute('href', 'https://talentsoft.atlassian.net/browse/' + i.key);
+            link.innerText = i.key;
+            const tooltip = issue.querySelector('.mdl-tooltip');
+            tooltip.setAttribute('for', index);
+            tooltip.innerText = i.summary;
             return issue;
         });
 
         var li = templateRow.content.cloneNode(true);
-        li.querySelectorAll('.file')[0].textContent = file[0];
-        li.querySelectorAll('.count')[0].textContent = file[1].count;
+        li.querySelector('.file').textContent = file[0];
+        //li.querySelectorAll('.count')[0].textContent = file[1].count;
         issues.forEach(i => {
-            li.querySelectorAll('.issues')[0].appendChild(i);
+            li.querySelector('.issues').appendChild(i);
         });
         causefiles.appendChild(li);
     });
