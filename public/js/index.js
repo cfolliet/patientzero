@@ -32,18 +32,26 @@ async function getData() {
 }
 
 function refreshCauses() {
+    var templateRow = document.querySelector('#causeRow');
+    var templateIssue = document.querySelector('#issue');
     const nbCauses = document.getElementById('nbCauses');
     const nbNoCauses = document.getElementById('nbNoCauses');
     const causefiles = document.getElementById('causefiles');
     nbCauses.innerText = `Bug with commits: ${data.matchCount}`;
     nbNoCauses.innerText = `Bug without commits: ${data.noMatchCount}`;;
     data.files.forEach(file => {
-        const issues = file[1].issues.map(i => '<a href="https://talentsoft.atlassian.net/browse/' + i.key + '" title="' + i.summary + '">' + i.key + '</a>').join('|');
-        const li = document.createElement('li');
-        let text = `<span class="file">${file[0]}</span>`;
-        text += `<span class="count">${file[1].count}</span>`;
-        text += `<span class="issues">${issues}</span>`;
-        li.innerHTML = text;
+        const issues = file[1].issues.map(i => {
+            const issue = templateIssue.content.cloneNode(true);
+            issue.querySelectorAll('.chip')[0].innerHTML = '<a href="https://talentsoft.atlassian.net/browse/' + i.key + '" title="' + i.summary + '">' + i.key + '</a>';
+            return issue;
+        });
+
+        var li = templateRow.content.cloneNode(true);
+        li.querySelectorAll('.file')[0].textContent = file[0];
+        li.querySelectorAll('.count')[0].textContent = file[1].count;
+        issues.forEach(i => {
+            li.querySelectorAll('.issues')[0].appendChild(i);
+        });
         causefiles.appendChild(li);
     });
 }
