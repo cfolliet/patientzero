@@ -37,6 +37,7 @@ function refreshCauses() {
     const nbCauses = document.getElementById('nbCauses');
     const nbNoCauses = document.getElementById('nbNoCauses');
     const causefiles = document.getElementById('causefiles');
+    causefiles.innerHTML = '';
     nbCauses.innerText = `Bug with commits: ${data.matchCount}`;
     nbNoCauses.innerText = `Bug without commits: ${data.noMatchCount}`;
     let index = 0;
