@@ -1,5 +1,3 @@
-let data = null;
-
 function setConfig() {
     const raw = localStorage.getItem('config');
     if (raw) {
@@ -15,67 +13,32 @@ function setConfig() {
     }
 }
 
-async function getData() {
-    const workingDir = document.getElementById('workingDir').value;
-    const host = document.getElementById('host').value;
-    const email = document.getElementById('email').value;
-    const token = document.getElementById('token').value;
-    const since = document.getElementById('since').value;
-    const boardId = document.getElementById('boardId').value;
-    const projectKey = document.getElementById('projectKey').value;
-    const keyFormat = document.getElementById('keyFormat').value;
-    const url = encodeURI(`/api/getdata?workingDir=${workingDir}&host=${host}&email=${email}&token=${token}&since=${since}&boardId=${boardId}&projectKey=${projectKey}&keyFormat=${keyFormat}`);
-    const response = await fetch(url);
-    data = await response.json();
-    refreshCauses();
-    localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }))
+function getViewmodel() {
+    async function loadData() {
+        const workingDir = document.getElementById('workingDir').value;
+        const host = document.getElementById('host').value;
+        const email = document.getElementById('email').value;
+        const token = document.getElementById('token').value;
+        const since = document.getElementById('since').value;
+        const boardId = document.getElementById('boardId').value;
+        const projectKey = document.getElementById('projectKey').value;
+        const keyFormat = document.getElementById('keyFormat').value;
+        const url = encodeURI(`/api/getdata?workingDir=${workingDir}&host=${host}&email=${email}&token=${token}&since=${since}&boardId=${boardId}&projectKey=${projectKey}&keyFormat=${keyFormat}`);
+        const response = await fetch(url);
+        this.data = await response.json();
+
+        // trick waiting to have for in for with alpinejs
+        this.issues = this.data.files.map(file => file[1].issues);
+        console.log(this.issues)
+
+        localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }));
+    }
+
+    return {
+        data: null,
+        issues: [],
+        loadData: loadData
+    }
 }
 
-function refreshCauses() {
-    var templateRow = document.querySelector('#causeRow');
-    var templateIssue = document.querySelector('#issue');
-    const nbCauses = document.getElementById('nbCauses');
-    const nbNoCauses = document.getElementById('nbNoCauses');
-    const causefiles = document.getElementById('causefiles');
-    nbCauses.innerText = `Bug with commits: ${data.matchCount}`;
-    nbNoCauses.innerText = `Bug without commits: ${data.noMatchCount}`;
-    let index = 0;
-    data.files.forEach(file => {
-        const issues = file[1].issues.map(i => {
-            index++;
-            const issue = templateIssue.content.cloneNode(true);
-            const link = issue.querySelector('.link');
-            link.setAttribute('id', index);
-            link.setAttribute('href', 'https://talentsoft.atlassian.net/browse/' + i.key);
-            link.innerText = i.key;
-            const tooltip = issue.querySelector('.mdl-tooltip');
-            tooltip.setAttribute('for', index);
-            tooltip.innerText = i.summary;
-            return issue;
-        });
-
-        var li = templateRow.content.cloneNode(true);
-        li.querySelector('.file').textContent = file[0];
-        //li.querySelectorAll('.count')[0].textContent = file[1].count;
-        issues.forEach(i => {
-            li.querySelector('.issues').appendChild(i);
-        });
-        causefiles.appendChild(li);
-    });
-}
-
-function bind() {
-    const loadBt = document.getElementById('load');
-    loadBt.addEventListener('click', async () => {
-        loadBt.innerText = 'loading...';
-        await getData();
-        loadBt.innerText = 'load';
-    });
-}
-
-async function main() {
-    setConfig();
-    bind();
-}
-
-main();
+setConfig();
