@@ -41,6 +41,7 @@ function refreshCauses() {
     nbCauses.innerText = `Bug with commits: ${data.matchCount}`;
     nbNoCauses.innerText = `Bug without commits: ${data.noMatchCount}`;
     let index = 0;
+    const tooltips = [];
     data.files.forEach(file => {
         const issues = file[1].issues.map(i => {
             index++;
@@ -52,6 +53,7 @@ function refreshCauses() {
             const tooltip = issue.querySelector('.mdl-tooltip');
             tooltip.setAttribute('for', index);
             tooltip.innerText = i.summary;
+            tooltips.push(tooltip);
             return issue;
         });
 
@@ -63,6 +65,7 @@ function refreshCauses() {
         });
         causefiles.appendChild(li);
     });
+    tooltips.forEach(t => componentHandler.upgradeElement(t))
 }
 
 function bind() {
