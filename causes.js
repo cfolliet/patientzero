@@ -27,6 +27,7 @@ function joinIssuesAndCommits(issues, commits) {
     });
 
     return {
+        bugCount: issues.length,
         matchCount: matchCount,
         noMatchCount: noMatchCount,
         files: [...files.entries()].sort((a, b) => b[1].count - a[1].count)
