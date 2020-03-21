@@ -14,6 +14,14 @@
         .center {
             text-align: center;
         }
+
+        strong {
+            color: #e91e63;            
+        }
+
+        li.smaller {
+            height: 56px;
+        }
     </style>
 </head>
 
@@ -65,15 +73,15 @@
         </div>
         <div class="mdl-cell mdl-cell--12-col">
             <div id="causes">
-                <h4>There are <span id="nbBugs">?</span> bugs in Jira since last <span id="nbDays">?</span> days.<br />
-                    For <span id="nbCauses">?</span> of these bugs, <span id="nbFiles">?</span> files were modified to fix them.
+                <h4 class="center">There are <strong id="nbBugs">?</strong> bugs in Jira since last <strong id="nbDays">?</strong> days.<br />
+                    For <strong id="nbCauses">?</strong> of these bugs, <strong id="nbFiles">?</strong> files were modified to fix them.
                 </h4>
                 <ul class="mdl-list" id="causefiles"></ul>
             </div>
         </div>
     </div>
     <template id="causeRow">
-        <li class="mdl-list__item--two-line">
+        <li class="mdl-list__item--two-line smaller">
             <span class="mdl-list__item-primary-content">
                 <span class="file"></span>
                 <span class="issues mdl-list__item-sub-title"></span>
