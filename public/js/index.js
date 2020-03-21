@@ -25,7 +25,12 @@ async function getData() {
     const projectKey = document.getElementById('projectKey').value;
     const keyFormat = document.getElementById('keyFormat').value;
     const url = encodeURI(`/api/getdata?workingDir=${workingDir}&host=${host}&email=${email}&token=${token}&since=${since}&boardId=${boardId}&projectKey=${projectKey}&keyFormat=${keyFormat}`);
-    const response = await fetch(url);
+    const response = await fetch(url).catch(error => {
+        alert(error);
+    });
+    if(!response.ok){
+        alert(response);
+    }
     data = await response.json();
     refreshCauses();
     localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }))
@@ -75,9 +80,11 @@ function refreshCauses() {
 function bind() {
     const loadBt = document.getElementById('load');
     loadBt.addEventListener('click', async () => {
+        loadBt.setAttribute("disabled", "");
         loadBt.innerText = 'loading...';
         await getData();
         loadBt.innerText = 'load';
+        loadBt.removeAttribute("disabled", "");
     });
 }
 
