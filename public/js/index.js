@@ -35,7 +35,7 @@ async function getData() {
         notification.MaterialSnackbar.showSnackbar(
             {
                 message: JSON.stringify(data.error),
-                timeout: 10000
+                timeout: 5000
             }
         );
     }

@@ -12,10 +12,8 @@ async function getIssues(host, email, token, since, boardId, projectKey) {
 
     try {
         const result = await jira.board.getIssuesForBoard({ boardId: boardId, jql: `project = "${projectKey}" AND type = Bug AND status = Done AND resolved > -${since}d`, maxResults: 500 });
-        console.log('result', result)
         return result.issues;
     } catch (error) {
-        console.log('error', error)
         let message;
         if (error.code) {
             message = 'An error occured';
