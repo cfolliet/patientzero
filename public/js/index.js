@@ -25,15 +25,14 @@ async function getData() {
     const projectKey = document.getElementById('projectKey').value;
     const keyFormat = document.getElementById('keyFormat').value;
     const url = encodeURI(`/api/getdata?workingDir=${workingDir}&host=${host}&email=${email}&token=${token}&since=${since}&boardId=${boardId}&projectKey=${projectKey}&keyFormat=${keyFormat}`);
-    const response = await fetch(url).catch(error => {
-        alert(error);
-    });
-    if(!response.ok){
-        alert(response);
-    }
+    const response = await fetch(url);
     data = await response.json();
-    refreshCauses();
-    localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }))
+    if (response.ok) {
+        refreshCauses();
+        localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }));
+    } else {
+        console.log(response.body);
+    }
 }
 
 function refreshCauses() {

@@ -36,6 +36,9 @@ function joinIssuesAndCommits(issues, commits) {
 
 async function getCauses(workingDir, host, email, token, since, boardId, projectKey, keyFormat) {
     let issues = await getIssues(host, email, token, since, boardId, projectKey);
+    if (issues.error) {
+        return issues;
+    }
     let commits = await getCommits(workingDir, since, keyFormat);
     return joinIssuesAndCommits(issues, commits);
 }
