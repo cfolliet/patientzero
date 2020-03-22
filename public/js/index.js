@@ -31,7 +31,13 @@ async function getData() {
         refreshCauses();
         localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }));
     } else {
-        console.log(response.body);
+        var notification = document.querySelector('.mdl-js-snackbar');
+        notification.MaterialSnackbar.showSnackbar(
+            {
+                message: JSON.stringify(data.error),
+                timeout: 10000
+            }
+        );
     }
 }
 

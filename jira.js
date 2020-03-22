@@ -12,12 +12,20 @@ async function getIssues(host, email, token, since, boardId, projectKey) {
 
     try {
         const result = await jira.board.getIssuesForBoard({ boardId: boardId, jql: `project = "${projectKey}" AND type = Bug AND status = Done AND resolved > -${since}d`, maxResults: 500 });
+        console.log('result', result)
         return result.issues;
     } catch (error) {
-        return { error: JSON.parse(error).body.errors };
+        console.log('error', error)
+        let message;
+        if (error.code) {
+            message = 'An error occured';
+        } else {
+            const parsedError = JSON.parse(error);
+            message = parsedError.body.message || parsedError.body.errors;
+        }
+        return { error: message };
     }
 }
-
 
 async function test() {
     const issues = await getIssues(30, 32, 'HT');
