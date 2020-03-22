@@ -15,15 +15,20 @@ const server = http.createServer((request, response) => {
         const projectKey = uri.query['projectKey'];
         const keyFormat = uri.query['keyFormat'];
         getCauses(workingDir, host, email, token, since, boardId, projectKey, keyFormat).then(data => {
-            if (data.error) {
-                response.writeHead(500, { 'Content-Type': 'application/json' });
-                response.write(JSON.stringify(data));
-                response.end();
-            } else {
-                response.writeHead(200, { 'Content-Type': 'application/json' });
-                response.write(JSON.stringify(data));
-                response.end();
+            response.writeHead(200, { 'Content-Type': 'application/json' });
+            response.write(JSON.stringify(data));
+            response.end();
+        }).catch(error => {
+            let message = 'An error occured';
+            let parsedError = JSON.parse(error);
+            if(parsedError.body.message) {
+                message = parsedError.body.message;
+            } else if(parsedError.body.errors){
+                message = parsedError.body.errors;
             }
+            response.writeHead(500, { 'Content-Type': 'application/json' });
+            response.write(JSON.stringify(message));
+            response.end();
         });
     } else {
         return handler(request, response, {
