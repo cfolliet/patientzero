@@ -13,8 +13,10 @@ async function getCommits(workingDir, since, keyFormat) {
     ]);
   let commits = logs.split(/(?=commit )/).map(c => c.split('\n'));
   commits = commits.map(c => {
+    const c3 = c[3] ? c[3].trim() : '';
+    const c4 = c[4] ? c[4].trim() : '';
     return {
-      message: c[3].trim() + c[4].trim(),
+      message: c3 + c4,
       files: c.slice(5).filter(f => f.length)
     };
   });
