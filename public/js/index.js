@@ -34,7 +34,7 @@ async function getData() {
         var notification = document.querySelector('.mdl-js-snackbar');
         notification.MaterialSnackbar.showSnackbar(
             {
-                message: JSON.stringify(data.error),
+                message: data,
                 timeout: 5000
             }
         );

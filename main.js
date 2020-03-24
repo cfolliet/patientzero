@@ -19,15 +19,11 @@ const server = http.createServer((request, response) => {
             response.write(JSON.stringify(data));
             response.end();
         }).catch(error => {
-            let message = 'An error occured';
-            let parsedError = JSON.parse(error);
-            if(parsedError.body.message) {
-                message = parsedError.body.message;
-            } else if(parsedError.body.errors){
-                message = parsedError.body.errors;
-            }
             response.writeHead(500, { 'Content-Type': 'application/json' });
-            response.write(JSON.stringify(message));
+            if (error.toString) {
+                error = error.toString();
+            }
+            response.write(JSON.stringify(error));
             response.end();
         });
     } else {
