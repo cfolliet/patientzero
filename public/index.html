@@ -6,9 +6,11 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+        integrity="sha256-R4pqcOYV8lt7snxMQO/HSbVCFRPMdrhAFMH+vr9giYI=" crossorigin="anonymous"></script>
     <style>
         .content-grid {
-            max-width: 800px;
+            max-width: 1000px;
         }
 
         .center {
@@ -24,7 +26,7 @@
         }
 
         #causes {
-            margin-top: -40px;
+            margin-top: -34px;
         }
     </style>
 </head>
@@ -91,15 +93,16 @@
                 </div>
             </div>
         </div>
-        <div class="mdl-cell mdl-cell--12-col">
-            <div id="causes">
-                <h4 class="center">There are <strong id="nbBugs">?</strong> bugs in Jira since last <strong
-                        id="nbDays">?</strong> days.<br />
-                    For <strong id="nbCauses">?</strong> of these bugs, <strong id="nbFiles">?</strong> files were
-                    modified to fix them.
-                </h4>
-                <ul class="mdl-list" id="causefiles"></ul>
-            </div>
+        <div id="causes" class="mdl-cell mdl-cell--8-col">
+            <h4 class="center">There are <strong id="nbBugs">?</strong> bugs in Jira since last <strong
+                    id="nbDays">?</strong> days.<br />
+                For <strong id="nbCauses">?</strong> of these bugs, <strong id="nbFiles">?</strong> files were
+                modified to fix them.
+            </h4>
+            <ul class="mdl-list" id="causefiles"></ul>
+        </div>
+        <div class="mdl-cell mdl-cell--4-col">
+            <canvas id="testChart" width="50" height="50"></canvas>
         </div>
     </div>
     <div aria-live="assertive" aria-atomic="true" aria-relevant="text" class="mdl-snackbar mdl-js-snackbar">

@@ -26,8 +26,19 @@ async function getData() {
     const keyFormat = document.getElementById('keyFormat').value;
     const url = encodeURI(`/api/getdata?workingDir=${workingDir}&host=${host}&email=${email}&token=${token}&since=${since}&boardId=${boardId}&projectKey=${projectKey}&keyFormat=${keyFormat}`);
     const response = await fetch(url);
-    data = await response.json();
+
     if (response.ok) {
+        data = await response.json();
+        data.testFiles = [];
+        data.codeFiles = [];
+        data.files.forEach(f => {
+            if (f[0].toLowerCase().includes('tests')) {
+                data.testFiles.push(f);
+            } else {
+                data.codeFiles.push(f);
+            }
+        });
+
         refreshCauses();
         localStorage.setItem('config', JSON.stringify({ workingDir, host, email, token, since, boardId, projectKey, keyFormat }));
     } else {
@@ -41,9 +52,39 @@ async function getData() {
     }
 }
 
+function drawTestChart(testCount, codeCount) {
+    let data = {
+        datasets: [{
+            data: [codeCount, testCount],
+            backgroundColor: [
+                'rgb(63,81,181)',
+                '#e91e63'
+            ],
+        }],
+        labels: [
+            'Code files',
+            'Test files'
+        ]
+    };
+
+    let options = {
+        title: {
+            display: true,
+            text: 'Code VS Test Files'
+        }
+    };
+
+    let ctx = document.getElementById('testChart');
+    let testChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: options
+    });
+}
+
 function refreshCauses() {
-    var templateRow = document.querySelector('#causeRow');
-    var templateIssue = document.querySelector('#issue');
+    let templateRow = document.querySelector('#causeRow');
+    let templateIssue = document.querySelector('#issue');
     const nbCauses = document.getElementById('nbCauses');
     const nbBugs = document.getElementById('nbBugs');
     const nbDays = document.getElementById('nbDays');
@@ -73,13 +114,14 @@ function refreshCauses() {
 
         var li = templateRow.content.cloneNode(true);
         li.querySelector('.file').textContent = file[0];
-        //li.querySelectorAll('.count')[0].textContent = file[1].count;
         issues.forEach(i => {
             li.querySelector('.issues').appendChild(i);
         });
         causefiles.appendChild(li);
     });
     tooltips.forEach(t => componentHandler.upgradeElement(t))
+
+    drawTestChart(data.testFiles.length, data.codeFiles.length);
 }
 
 function bind() {
