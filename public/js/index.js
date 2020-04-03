@@ -1,5 +1,8 @@
 let data = null;
 
+const FRONT = ['html', 'js', 'cshtml', 'tsx', 'ts', 'css', 'less']
+const BACK = ['cs', 'config', 'resx', 'csproj', 'xml', 'sql']
+
 function setConfig() {
     const raw = localStorage.getItem('config');
     if (raw) {
@@ -32,13 +35,21 @@ async function getData() {
         data.testFiles = [];
         data.codeFiles = [];
         data.codeExtentionFiles = {};
+        data.frontFiles = [];
+        data.backFiles = [];
         data.files.forEach(f => {
             if (f[0].toLowerCase().includes('tests')) {
                 data.testFiles.push(f);
             } else {
                 data.codeFiles.push(f);
-                const previousCount = data.codeExtentionFiles[f[0].split('.').pop()] || 0;
-                data.codeExtentionFiles[f[0].split('.').pop()] = previousCount + 1;
+                const extension = f[0].split('.').pop();
+                const previousCount = data.codeExtentionFiles[extension] || 0;
+                data.codeExtentionFiles[extension] = previousCount + 1;                
+                if (FRONT.includes(extension)) {
+                    data.frontFiles.push(f);
+                } else if (BACK.includes(extension)) {
+                    data.backFiles.push(f);
+                }
             }
         });
 
@@ -86,10 +97,10 @@ function drawTestChart(testCount, codeCount) {
 }
 
 
-function drawExtensionChart(codeExtentionFiles) {
+function drawExtensionChart(datasource) {
     let data = {
         datasets: [{
-            data: Object.values(codeExtentionFiles),
+            data: Object.values(datasource.codeExtentionFiles),
             backgroundColor: [
                 '#f44336',
                 '#9C27B0',
@@ -103,15 +114,33 @@ function drawExtensionChart(codeExtentionFiles) {
                 '#2196F3',
                 '#673AB7',
                 '#E91E63',
+            ],
+            labels: Object.keys(datasource.codeExtentionFiles)
+        },
+        {
+            data: [datasource.frontFiles.length, datasource.backFiles.length, datasource.codeFiles.length - datasource.frontFiles.length - datasource.backFiles],
+            labels: ['Client side', 'Server side', 'Other'],
+            backgroundColor: [
+                'rgb(63,81,181)',
+                '#e91e63'
             ]
         }],
-        labels: Object.keys(codeExtentionFiles)
+        labels: Object.keys(datasource.codeExtentionFiles)
     };
 
     let options = {
         title: {
             display: true,
             text: 'File Extensions'
+        },
+        tooltips: {
+            callbacks: {
+                label: function (tooltipItem, data) {
+                    var dataset = data.datasets[tooltipItem.datasetIndex];
+                    var index = tooltipItem.index;
+                    return dataset.labels[index] + ': ' + dataset.data[index];
+                }
+            }
         }
     };
 
@@ -163,7 +192,7 @@ function refreshCauses() {
     tooltips.forEach(t => componentHandler.upgradeElement(t))
 
     drawTestChart(data.testFiles.length, data.codeFiles.length);
-    drawExtensionChart(data.codeExtentionFiles);
+    drawExtensionChart(data);
 }
 
 function bind() {
