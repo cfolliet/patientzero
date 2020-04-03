@@ -31,11 +31,14 @@ async function getData() {
         data = await response.json();
         data.testFiles = [];
         data.codeFiles = [];
+        data.codeExtentionFiles = {};
         data.files.forEach(f => {
             if (f[0].toLowerCase().includes('tests')) {
                 data.testFiles.push(f);
             } else {
                 data.codeFiles.push(f);
+                const previousCount = data.codeExtentionFiles[f[0].split('.').pop()] || 0;
+                data.codeExtentionFiles[f[0].split('.').pop()] = previousCount + 1;
             }
         });
 
@@ -75,6 +78,44 @@ function drawTestChart(testCount, codeCount) {
     };
 
     let ctx = document.getElementById('testChart');
+    let testChart = new Chart(ctx, {
+        type: 'pie',
+        data: data,
+        options: options
+    });
+}
+
+
+function drawExtensionChart(codeExtentionFiles) {
+    let data = {
+        datasets: [{
+            data: Object.values(codeExtentionFiles),
+            backgroundColor: [
+                '#f44336',
+                '#9C27B0',
+                '#3F51B5',
+                '#009688',
+                '#FF9800',
+                '#9E9E9E',
+                '#607D8B',
+                '#FF5722',
+                '#FFEB3B',
+                '#2196F3',
+                '#673AB7',
+                '#E91E63',
+            ]
+        }],
+        labels: Object.keys(codeExtentionFiles)
+    };
+
+    let options = {
+        title: {
+            display: true,
+            text: 'File Extensions'
+        }
+    };
+
+    let ctx = document.getElementById('extensionChart');
     let testChart = new Chart(ctx, {
         type: 'pie',
         data: data,
@@ -122,6 +163,7 @@ function refreshCauses() {
     tooltips.forEach(t => componentHandler.upgradeElement(t))
 
     drawTestChart(data.testFiles.length, data.codeFiles.length);
+    drawExtensionChart(data.codeExtentionFiles);
 }
 
 function bind() {
