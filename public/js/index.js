@@ -1,4 +1,6 @@
 let data = null;
+let testChart = null;
+let extensionChart = null;
 
 const FRONT = ['html', 'js', 'cshtml', 'tsx', 'ts', 'css', 'less']
 const BACK = ['cs', 'config', 'resx', 'csproj', 'xml', 'sql']
@@ -94,7 +96,10 @@ function drawTestChart(testCount, codeCount) {
     };
 
     let ctx = document.getElementById('testChart');
-    let testChart = new Chart(ctx, {
+    if(testChart){
+        testChart.destroy();
+    }
+    testChart = new Chart(ctx, {
         type: 'pie',
         data: data,
         options: options
@@ -149,8 +154,11 @@ function drawExtensionChart(datasource) {
         }
     };
 
-    let ctx = document.getElementById('extensionChart');
-    let testChart = new Chart(ctx, {
+    let ctx = document.getElementById('extensionChart');    
+    if(extensionChart){
+        extensionChart.destroy();
+    }
+    extensionChart = new Chart(ctx, {
         type: 'pie',
         data: data,
         options: options
