@@ -2,8 +2,8 @@ let data = null;
 let testChart = null;
 let extensionChart = null;
 
-const FRONT = ['html', 'js', 'cshtml', 'tsx', 'ts', 'css', 'less']
-const BACK = ['cs', 'config', 'resx', 'csproj', 'xml', 'sql']
+const FRONT = ['html', 'js', 'cshtml', 'tsx', 'ts', 'css', 'less', 'json'];
+const BACK = ['cs', 'config', 'resx', 'csproj', 'xml', 'sql'];
 
 function setConfig() {
     const raw = localStorage.getItem('config');
