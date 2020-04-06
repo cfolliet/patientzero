@@ -33,24 +33,29 @@ async function getData() {
     if (response.ok) {
         data = await response.json();
         data.testFiles = [];
-        data.codeFiles = [];
         data.codeExtentionFiles = {};
         data.frontFiles = [];
         data.backFiles = [];
+        data.otherFiles = [];
         data.files.forEach(f => {
             if (f[0].toLowerCase().includes('tests')) {
                 data.testFiles.push(f);
             } else {
-                data.codeFiles.push(f);
                 const extension = f[0].split('.').pop();
-                const previousCount = data.codeExtentionFiles[extension] || 0;
-                data.codeExtentionFiles[extension] = previousCount + 1;                
                 if (FRONT.includes(extension)) {
                     data.frontFiles.push(f);
                 } else if (BACK.includes(extension)) {
                     data.backFiles.push(f);
+                } else {
+                    data.otherFiles.push(f);
                 }
             }
+        });
+
+        [...data.frontFiles, ...data.backFiles, ...data.otherFiles].forEach(f => {
+            const extension = f[0].split('.').pop();
+            const previousCount = data.codeExtentionFiles[extension] || 0;
+            data.codeExtentionFiles[extension] = previousCount + 1;
         });
 
         refreshCauses();
@@ -118,7 +123,7 @@ function drawExtensionChart(datasource) {
             labels: Object.keys(datasource.codeExtentionFiles)
         },
         {
-            data: [datasource.frontFiles.length, datasource.backFiles.length, datasource.codeFiles.length - datasource.frontFiles.length - datasource.backFiles],
+            data: [datasource.frontFiles.length, datasource.backFiles.length, datasource.otherFiles.length],
             labels: ['Client side', 'Server side', 'Other'],
             backgroundColor: [
                 'rgb(63,81,181)',
@@ -191,7 +196,7 @@ function refreshCauses() {
     });
     tooltips.forEach(t => componentHandler.upgradeElement(t))
 
-    drawTestChart(data.testFiles.length, data.codeFiles.length);
+    drawTestChart(data.testFiles.length, data.frontFiles.length + data.backFiles.length + data.otherFiles.length);
     drawExtensionChart(data);
 }
 
